@@ -7,11 +7,22 @@ import struct
 
 class IRacingReader:
     def __init__(self):
+        ##setup variables
         self.ir = irsdk.IRSDK()
-        self.ir.startup()
         self.data = {}
-        self.iracing_running = False
         self.sample_telem_mode = False
+        self.ir_connected = False
+
+
+
+    def scan_for_iracing_connection(self):
+        if self.ir_connected and not (self.ir.is_initialized and self.ir.is_connected):
+            self.ir_connected = False
+            self.ir.shutdown()
+            print("iRacing connection lost.")
+        elif not self.ir_connected and self.ir.startup() and self.ir.is_initialized and self.ir.is_connected:
+            self.ir_connected = True
+            print("iRacing connection established.")
 
     def read_sample_telemetry(self):
         if not os.path.exists("telemetry.ibt"):
@@ -30,8 +41,10 @@ class IRacingReader:
 
     async def update(self):
         while True:
-            if self.ir.is_connected and self.ir.is_running:
-                self.iracing_running = True
+            self.scan_for_iracing_connection()  # Check for iRacing connection
+
+            if self.ir_connected:
+                
                 self.data = {
                     "flag": self.ir['SessionFlags'],
                     "rpm": self.ir['RPM'],
@@ -39,7 +52,6 @@ class IRacingReader:
                 }
                 print(f"Telemetry Data: {self.data}")
             else:
-                self.iracing_connected = False
 
                 if self.sample_telem_mode:
                     try: 
@@ -58,4 +70,4 @@ class IRacingReader:
                     
                 else:
                     print("iRacing is not connected or not running.")
-            await asyncio.sleep(1)  # Run at 60Hz
+            await asyncio.sleep(1/60)  # Run at 60Hz

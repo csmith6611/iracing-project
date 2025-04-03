@@ -12,7 +12,7 @@ async def async_tasks(telemetry, device_manager):
     telemetry_task = asyncio.create_task(telemetry.update())  # Get latest iRacing data
 
     while True:
-        if not telemetry.iracing_running and not telemetry.sample_telem_mode:
+        if not telemetry.ir_connected and not telemetry.sample_telem_mode:
             await device_manager.scan_devices()  # Scan for devices if iRacing is not running
             await asyncio.sleep(1)
         else:

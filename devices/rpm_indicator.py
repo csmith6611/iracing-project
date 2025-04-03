@@ -7,7 +7,6 @@ class RPMIndicator(BaseDevice):
         percentage = max(1, min(100, percentage))  # Clamp between
         percentage = round(percentage, 2)
         self.serial_handler.ser.write(f"{percentage}\n".encode())  
-        
         try:
             response = self.serial_handler.ser.readline().decode().strip()  # Read response
         except Exception as e:
