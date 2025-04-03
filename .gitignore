@@ -3,3 +3,4 @@ dist/
 gui/__pycache__/
 .venv/
 __pycache__/
+*/__pycache__/
