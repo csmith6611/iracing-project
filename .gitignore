@@ -1,0 +1,5 @@
+build/
+dist/
+gui/__pycache__/
+.venv
+__pycache__/
