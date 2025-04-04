@@ -24,10 +24,10 @@ class RPMIndicator(BaseDevice):
 
        # print(f"RPM: {rpm}, Shift RPM: {shift_rpm}, Blink RPM: {blink_rpm}, First Light RPM: {first_light_rpm}, Last Light RPM: {last_light_rpm}")
 
-        percentage = 0
+        percentage = 1
         ##if rpm is less than first_light_rpm, set to 0
         if rpm < first_light_rpm:
-            percentage = 0
+            percentage = 1
 
         if rpm >= first_light_rpm and rpm < last_light_rpm:
             percentage = (rpm - first_light_rpm) / (last_light_rpm - first_light_rpm) * 100
@@ -36,19 +36,12 @@ class RPMIndicator(BaseDevice):
             percentage = 100
 
 
-
+        percentage = int(round(percentage))
        
 
         self.serial_handler.ser.write(f"{percentage}\n".encode())  
-        try:
-          self.serial_handler.ser.readline().decode().strip()  # Read response
-        except Exception as e:
-            print(f"Error reading response: {e}")
-            response = None
-        finally:
-            if response:
-                print(f"Response from device: {response}")
-            else:
-                print("No response from device.")
-
+        print('sent percentage:', percentage)
+        
+            
+   
        

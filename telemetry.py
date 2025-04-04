@@ -57,7 +57,7 @@ class IRacingReader:
                     }
                     # Add more variables as needed
                 }
-               
+                print("r")               
             else:
 
                 if self.sample_telem_mode:
