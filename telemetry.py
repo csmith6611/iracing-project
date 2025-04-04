@@ -75,6 +75,5 @@ class IRacingReader:
                         print(f"Error reading sample telemetry: {e}")
                         
                     
-                else:
-                    print("iRacing is not connected or not running.")
+                
             await asyncio.sleep(1/60)  # Run at 60Hz
