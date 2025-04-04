@@ -46,11 +46,18 @@ class IRacingReader:
             if self.ir_connected:
                 
                 self.data = {
+                    "gear": self.ir['Gear'],
                     "flag": self.ir['SessionFlags'],
-                    "rpm": self.ir['RPM'],
+                    "rpm_info": {
+                        "rpm": self.ir['RPM'],
+                        "blink_threshold": self.ir["PlayerCarSLBlinkRPM"],
+                        "first_light_rpm": self.ir["PlayerCarSLFirstRPM"],
+                        "last_light_rpm": self.ir["PlayerCarSLLastRPM"],
+                        "shift_rpm": self.ir["PlayerCarSLShiftRPM"],
+                    }
                     # Add more variables as needed
                 }
-                print(f"Telemetry Data: {self.data}")
+               
             else:
 
                 if self.sample_telem_mode:
