@@ -13,6 +13,7 @@ async def async_tasks(telemetry, device_manager, gui_callback):
     while True:
         if not telemetry.ir_connected and not telemetry.sample_telem_mode:
             await device_manager.scan_devices()  # Scan for devices if iRacing is not running
+            await device_manager.ping_while_idle()  # Ping devices to check if they are still connected
             await asyncio.sleep(1)
         else:
             await device_manager.update_devices(telemetry.data)  # Send updates to ESP32s

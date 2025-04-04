@@ -24,6 +24,28 @@ class DeviceManager:
         if tasks:
             await asyncio.gather(*tasks)
     
+    async def ping_while_idle(self):
+        removed_devices_queue = []
+        for key in self.devices:
+            device = self.devices[key]
+            try:
+                response = await device['device_handler'].ping()
+                if response:
+                    print(f"[INFO] Device {device['type']} is responsive.")
+                else:
+                    print(f"[WARNING] Device {device['type']} is not responding.")
+                    removed_devices_queue.append(key)  # Mark for removal
+
+            except Exception as e:
+                print(f"[WARNING] Failed to ping device: {e}")
+                self.devices.__delitem__(key)  # Remove unresponsive device
+                removed_devices_queue.append(key)  # Mark for removal
+        
+        for key in removed_devices_queue:
+            if key in self.devices:
+                print(f"[INFO] Device {self.devices[key]['type']} removed.")
+                del self.devices[key]
+    
     async def scan_devices(self):
         """Scans for devices (placeholder for future implementation)."""
         print("[INFO] Scanning for devices...")
